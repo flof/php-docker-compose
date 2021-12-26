@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  php-fpm:
+    build: docker/php
+    volumes:
+      - ${WWW_DIR}:/var/www/html
+    restart: unless-stopped
+    networks:
+      - default
+      - mariadb
+  nginx:
+    image: nginx:1.21.4
+    restart: unless-stopped
+    volumes:
+      - ${WWW_DIR}:/var/www/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - ${PORT}:80
+networks:
+  mariadb:
+    external: true
+    name: mariadb
